@@ -1,0 +1,26 @@
+{
+  "name": "electronrecaptchasolver",
+  "version": "1.0.0",
+  "description": "This Electron Application solves Recaptchas in an Electron Application",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LucStr/ElectronReCaptchaSolver.git"
+  },
+  "keywords": [
+    "Recaptcha",
+    "Electron"
+  ],
+  "author": "Luca Strebel",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LucStr/ElectronReCaptchaSolver/issues"
+  },
+  "homepage": "https://github.com/LucStr/ElectronReCaptchaSolver#readme",
+  "dependencies": {
+    "electron": "^2.0.9"
+  }
+}
