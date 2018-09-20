@@ -1,6 +1,7 @@
 const electron = require('electron');
 const path = require('path');
 const url = require('url');
+const speechToText = require('./speechToText')
 
 
 const { app, BrowserWindow, session } = electron;
@@ -10,28 +11,40 @@ var mainWindow;
 app.on('ready', () => {
     initMainWindow();
     removeToolBar();
-    mainWindow.maximize();
-    mainWindow.toggleDevTools();
     loadReCaptchaTestSite();
-    clearCookies();
-    var filter = {
-        urls: ["https://www.google.com/recaptcha/api2/payload?*"]
-    }
-    session.defaultSession.webRequest.onCompleted(filter, (details) => {
-        if(details.resourceType == "image"){
+    session.defaultSession.webRequest.onCompleted({ urls: ["https://www.google.com/recaptcha/api2/payload?*", "https://www.google.com/recaptcha/api2/bframe?*"] }, (details) => {
+        if(details.url.includes('https://www.google.com/recaptcha/api2/bframe?')){
+            pressCheckBox();
+            return;
+        }
+        if (details.resourceType == "image") {
             switchToAudio();
         } else {
-            solveAudioChallenge();
-            //mainWindow.webContents.executeJavaScript('alert("PETER")')
+            solveAudioChallenge(details.url).then(e => {
+                pressVerify();
+            });
         }
-        console.log(JSON.stringify(details));
     });
 });
 
-function switchToAudio(){
-    setTimeout(() => {
-        mainWindow.webContents.executeJavaScript(`clickAudioButton();`);
-    }, 2315)
+function pressCheckBox(){
+    mainWindow.webContents.executeJavaScript(`document.querySelector('[role="presentation"]').contentWindow.document.getElementById("recaptcha-anchor").click()`);
+}
+
+function switchToAudio() {
+    mainWindow.webContents.executeJavaScript(`window.document.querySelector('[title="recaptcha challenge"]').contentWindow.document.getElementById("recaptcha-audio-button").dispatchEvent(new MouseEvent('mouseover'));
+    window.document.querySelector('[title="recaptcha challenge"]').contentWindow.document.getElementById("recaptcha-audio-button").dispatchEvent(new MouseEvent('mouseenter'));`)
+    mainWindow.webContents.executeJavaScript(`window.document.querySelector('[title="recaptcha challenge"]').contentWindow.document.getElementById("recaptcha-audio-button").click();`);
+}
+
+function pressVerify() {
+    mainWindow.webContents.executeJavaScript(`window.document.querySelector('[title="recaptcha challenge"]').contentWindow.document.getElementById("recaptcha-verify-button").click();`);
+}
+
+function solveAudioChallenge(url) {
+    return speechToText.getTextByUrl(url).then(e => {
+        mainWindow.webContents.executeJavaScript(`document.querySelector('[title="recaptcha challenge"]').contentWindow.document.getElementById('audio-response').value = "${e}"`);
+    })
 }
 
 function initMainWindow() {
@@ -48,13 +61,6 @@ function loadReCaptchaTestSite() {
         protocol: 'file:',
         slashes: true,
     }));
-}
-
-function clearCookies() {
-    //mainWindow.webContents.session.clearAuthCache();
-    mainWindow.webContents.session.clearCache(() => {});
-    mainWindow.webContents.session.clearHostResolverCache();
-    mainWindow.webContents.session.clearStorageData({storages: "appcache, cookies, filesystem, indexdb, localstorage, shadercache, websql, serviceworkers"});
 }
 
 function removeToolBar() {

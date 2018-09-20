@@ -14,7 +14,7 @@ var speechToText = new SpeechToTextV1({
 });
 
 function getTextByUrl(url) {
-    var audioPath = __dirname + './../temp/audio_' + new Date().valueOf() + '.mp3';
+    var audioPath = __dirname + '/temp/audio_' + new Date().valueOf() + '.mp3';
     return new Promise((resolve, reject) => {
         download(url).then(data => {
             fs.writeFileSync(audioPath, data);

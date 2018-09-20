@@ -21,6 +21,8 @@
   },
   "homepage": "https://github.com/LucStr/ElectronReCaptchaSolver#readme",
   "dependencies": {
-    "electron": "^2.0.9"
+    "download": "^7.1.0",
+    "electron": "^2.0.9",
+    "watson-developer-cloud": "^3.10.0"
   }
 }
