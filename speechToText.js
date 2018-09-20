@@ -22,6 +22,7 @@ function getTextByUrl(url) {
             recognize(audioPath, 'audio/mpeg', './transcription.txt')
                 .then(e => resolve(e))
                 .catch(e => reject(e));
+            fs.unlink(audioPath);
         });
     });
 }
