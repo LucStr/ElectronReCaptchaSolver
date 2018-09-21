@@ -19,7 +19,7 @@ function getTextByUrl(url) {
         download(url).then(data => {
             fs.writeFileSync(audioPath, data);
         }).then(() => {
-            recognize(audioPath, 'audio/mpeg', './transcription.txt')
+            recognize(audioPath, 'audio/mpeg')
                 .then(e => resolve(e))
                 .catch(e => reject(e));
             fs.unlink(audioPath);
@@ -27,7 +27,7 @@ function getTextByUrl(url) {
     });
 }
 
-function recognize(audio, content_type, dest) {
+function recognize(audio, content_type) {
     var params = {
         audio: fs.createReadStream(audio),
         content_type: content_type

@@ -32,9 +32,10 @@ function pressCheckBox(){
 }
 
 function switchToAudio() {
-    mainWindow.webContents.executeJavaScript(`window.document.querySelector('[title="recaptcha challenge"]').contentWindow.document.getElementById("recaptcha-audio-button").dispatchEvent(new MouseEvent('mouseover'));
-    window.document.querySelector('[title="recaptcha challenge"]').contentWindow.document.getElementById("recaptcha-audio-button").dispatchEvent(new MouseEvent('mouseenter'));`)
-    mainWindow.webContents.executeJavaScript(`window.document.querySelector('[title="recaptcha challenge"]').contentWindow.document.getElementById("recaptcha-audio-button").click();`);
+    mainWindow.webContents.executeJavaScript(`
+    window.document.querySelector('[title="recaptcha challenge"]').contentWindow.document.getElementById("recaptcha-audio-button").dispatchEvent(new MouseEvent('mouseover'));
+    window.document.querySelector('[title="recaptcha challenge"]').contentWindow.document.getElementById("recaptcha-audio-button").dispatchEvent(new MouseEvent('mouseenter'));
+    window.document.querySelector('[title="recaptcha challenge"]').contentWindow.document.getElementById("recaptcha-audio-button").click();`)
 }
 
 function pressVerify() {
